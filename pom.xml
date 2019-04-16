@@ -96,12 +96,26 @@
         <version>2.6</version>
         <executions>
           <execution>
-            <id>make-java-function</id>
+            <id>java-function</id>
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <outputDirectory>${project.build.directory}/function-java</outputDirectory>
               <descriptors>
                 <descriptor>src/main/assembly/function-java.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <phase>package</phase> <!-- append to the packaging phase. -->
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>java-function-zip</id>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <outputDirectory>${project.build.directory}/function-java</outputDirectory>
+              <descriptors>
+                <descriptor>src/main/assembly/function-java-zip.xml</descriptor>
               </descriptors>
             </configuration>
             <phase>package</phase> <!-- append to the packaging phase. -->
@@ -116,6 +130,20 @@
               <outputDirectory>${project.build.directory}/function-native</outputDirectory>
               <descriptors>
                 <descriptor>src/main/assembly/function-native.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <phase>package</phase> <!-- append to the packaging phase. -->
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>zip-native-function</id>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <outputDirectory>${project.build.directory}/function-native</outputDirectory>
+              <descriptors>
+                <descriptor>src/main/assembly/function-native-zip.xml</descriptor>
               </descriptors>
             </configuration>
             <phase>package</phase> <!-- append to the packaging phase. -->

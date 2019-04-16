@@ -28,3 +28,17 @@ REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 105.90 ms
 ```
 
 Same error is thrown on AWS
+
+# Run on AWS (API Gateway + Lambda)
+* [Serverless framework](https://serverless.com/framework/docs/providers/aws/guide/quick-start/) is required
+
+1. Deploy to AWS
+ - as a java function`sls deploy --type java -v`
+ - as a native function `sls deploy --type native -v`
+
+2. Invoke a function directly
+`sls invoke -f hello -l -p event.json`
+
+3. Invoke a function via API gateway
+`curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev?firstname=jon&lastname=doe'`
+

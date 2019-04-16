@@ -1,0 +1,20 @@
+service: hello-lambda
+
+provider:
+  name: aws
+  runtime: provided
+  stage: dev
+  region: eu-central-1
+
+custom:
+  type: ${opt:type, 'java'}
+
+package:
+  artifact: target/function-${self:custom.type}/amazon-lambda-dynamodb-1.0-SNAPSHOT.zip
+
+functions:
+  hello:
+    handler: Hanlder
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
