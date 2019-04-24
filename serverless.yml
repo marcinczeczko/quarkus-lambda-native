@@ -1,10 +1,14 @@
 service: hello-lambda
 
+frameworkVersion: ">=1.41.1"
+
 provider:
   name: aws
   runtime: provided
   stage: dev
   region: eu-central-1
+  tracing:
+    lambda: true
 
 custom:
   type: ${opt:type, 'java'}
@@ -14,7 +18,8 @@ package:
 
 functions:
   hello:
-    handler: Hanlder
+    handler: Handler
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http:
+          method: get
+          path: user

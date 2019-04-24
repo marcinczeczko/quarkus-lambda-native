@@ -1,44 +1,58 @@
 # Build
 `mvn clean package -DskipTests=true -Dnative=true -Dnative-image.docker-build=true`
 
-# Run locally using lambci docker
-* Run using Java
-`./run-lambda-java.sh`
+# Serverless framework
+- [Serverless framework >= 1.41.1](https://serverless.com/framework/docs/getting-started/)
+
+# Invoke local lambda as Java runtime
+* Run
+`sls invoke local -f hello --path event.json`
 
 * Result
 ```
+Serverless: Packaging service...
+Serverless: Building Docker image...
 START RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72 Version: $LATEST
+
+2019-04-24 12:56:22,672 INFO  [io.git.mar.HelloLambda] (Lambda Thread) Processed data
+Test lambda logger
 END RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72
-REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 4217.75 ms       Duration: 157.31 ms     Billed Duration: 200 ms Memory Size: 1536 MB    Max Memory Used: 78 MB  
-{"statusCode":200,"headers":null,"body":"Hello Hello World."}
+
+REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 1073.42 ms       Duration: 76.57 ms      Billed Duration: 100 ms Memory Size: 1536 MB    Max Memory Used: 87 MB  
+
+{"statusCode":200,"headers":null,"body":"{\"greeting\":\"Hello Hello World.\",\"context\":\"io.quarkus.amazon.lambda.runtime.AmazonLambdaContext@14964b0f\"}"}
 ```
 
-* Run using native image
-`./run-lambda-native.sh`
+# Invoke local lambda as Native runtime
+`sls invoke local -f hello --path event.json --type native`
 
-* Result - missing reflection for inner classes
+
+* Result
 ```
+Serverless: Packaging service...
+Serverless: Building Docker image...
 START RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72 Version: $LATEST
-END RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72
-REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 105.90 ms        Duration: 10.50 ms      Billed Duration: 100 ms Memory Size: 1536 MB    Max Memory Used: 24 MB  
-{
-  "errorType": "com.fasterxml.jackson.databind.exc.InvalidDefinitionException",
-  "errorMessage": "Cannot construct instance of `com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent$ProxyRequestContext` (no Creators, like default construct, exist): cannot deserialize from Object value (no delegate- or property-based Creator)\n at [Source: (sun.net.www.protocol.http.HttpURLConnection$HttpInputStream); line: 38, column: 5] (through reference chain: com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent[\"requestContext\"])"
-}
-```
 
-Same error is thrown on AWS
+2019-04-24 12:55:54,340 INFO  [io.git.mar.HelloLambda] (Lambda Thread) Processed data
+Test lambda logger2019-04-24 12:55:54,340 INFO  [io.quarkus] (main) Quarkus 999-SNAPSHOT started in 0.045s. Listening on: http://0.0.0.0:8080
+2019-04-24 12:55:54,343 INFO  [io.quarkus] (main) Installed features: [cdi, resteasy, resteasy-jsonb, smallrye-rest-client]
+
+END RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72
+REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 96.86 ms Duration: 8.46 ms       Billed Duration: 100 ms Memory Size: 1536 MB    Max Memory Used: 25 MB  
+
+{"statusCode":200,"headers":null,"body":"{\"greeting\":\"Hello Hello World.\",\"context\":\"io.quarkus.amazon.lambda.runtime.AmazonLambdaContext@7ff564a18800\"}"}
+```
 
 # Run on AWS (API Gateway + Lambda)
 * [Serverless framework](https://serverless.com/framework/docs/providers/aws/guide/quick-start/) is required
 
 1. Deploy to AWS
  - as a java function`sls deploy --type java -v`
- - as a native function `sls deploy --type native -v`
+ - or, as a native function `sls deploy --type native -v`
 
 2. Invoke a function directly
-`sls invoke -f hello -l -p event.json`
+`sls invoke -f hello -l --path event.json`
 
 3. Invoke a function via API gateway
-`curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev?firstname=jon&lastname=doe'`
+`curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev/user?firstname=jon&lastname=doe'`
 
