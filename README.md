@@ -1,8 +1,9 @@
+# Prerequisites
+- Graalvm >= rc15
+- [Serverless framework >= 1.41.1](https://serverless.com/framework/docs/getting-started/)
+
 # Build
 `mvn clean package -DskipTests=true -Dnative=true -Dnative-image.docker-build=true`
-
-# Serverless framework
-- [Serverless framework >= 1.41.1](https://serverless.com/framework/docs/getting-started/)
 
 # Invoke local lambda as Java runtime
 * Run
