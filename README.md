@@ -58,7 +58,7 @@ REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 96.86 ms 
 3. Invoke a function via API gateway
 `curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev/user?firstname=jon&lastname=doe'`
 
-## AWS X-Ray traces when running Quarkus java lambda
+## AWS Performance comparison
 | Runtime       | Initialization| Total Duration  |
 | ------------- |:-------------:| -----:|
 | Java - first  | 1.3 s| 1.7 s |
@@ -66,6 +66,7 @@ REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 96.86 ms 
 | Native -first | 157 ms     |   320 ms |
 | Native - next | 0     |   8 ms |
 
+## AWS X-Ray traces when running Quarkus java lambda
 ### Cold lambda
 <img src="hello-lambda-quarkus-java.png" width="600px">
 
