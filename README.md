@@ -1,7 +1,6 @@
 # Prerequisites
 - Graalvm >= rc15
 - [Serverless framework >= 1.41.1](https://serverless.com/framework/docs/getting-started/)
-- Quarkus snapshot (999-SNAPSHOT, if not available on central with my updates, just build it yourselves)
 
 # Build
 `mvn clean package -DskipTests=true -Dnative=true -Dnative-image.docker-build=true`
