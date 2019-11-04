@@ -1,25 +1,33 @@
-service: hello-lambda
+service: hello
 
-frameworkVersion: ">=1.41.1"
+frameworkVersion: ">=1.56.1"
 
 provider:
   name: aws
-  runtime: provided
   stage: dev
   region: eu-central-1
   tracing:
     lambda: true
 
-custom:
-  type: ${opt:type, 'java'}
-
 package:
-  artifact: target/function-${self:custom.type}/amazon-lambda-dynamodb-1.0-SNAPSHOT.zip
+  individually: true
 
 functions:
-  hello:
-    handler: Handler
+  helloJvm:
+    runtime: java8
+    handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
+    package:
+      artifact: target/quarkus-lambda-native-2.0-SNAPSHOT-runner.jar
     events:
       - http:
           method: get
-          path: user
+          path: jvm
+  helloNative:
+    runtime: provided
+    handler: handler
+    package:
+      artifact: target/function.zip
+    events:
+      - http:
+          method: get
+          path: native

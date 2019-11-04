@@ -1,80 +1,62 @@
 # Prerequisites
-- Graalvm >= rc15
-- [Serverless framework >= 1.41.1](https://serverless.com/framework/docs/getting-started/)
+- Graalvm >= 19.2.1
+- [Serverless framework >= 1.56.1](https://serverless.com/framework/docs/getting-started/)
 
 # Build
-`mvn clean package -DskipTests=true -Dnative=true -Dnative-image.docker-build=true`
+`mvn clean package -Dnative=true -Dnative-image.docker-build=true`
 
 # Invoke local lambda as Java runtime
 * Run
-`sls invoke local -f hello --path event.json`
+`sls invoke local --docker -f helloJvm --path event.json`
 
 * Result
 ```
 Serverless: Packaging service...
 Serverless: Building Docker image...
-START RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72 Version: $LATEST
+2019-10-31 14:48:19,911 INFO  [io.quarkus] (main) quarkus-lambda-native 2.0-SNAPSHOT (running on Quarkus 0.27.0) started in 3.914s. 
+2019-10-31 14:48:19,920 INFO  [io.quarkus] (main) Profile prod activated. 
+2019-10-31 14:48:19,921 INFO  [io.quarkus] (main) Installed features: [amazon-lambda, cdi]
+START RequestId: 2f0ec79e-a40e-47a5-ad11-e7be3ea84386 Version: $LATEST
+2019-10-31 14:48:20,068 INFO  [io.git.mar.HelloLambda] (main) [2f0ec79e-a40e-47a5-ad11-e7be3ea84386] Processed data
+END RequestId: 2f0ec79e-a40e-47a5-ad11-e7be3ea84386
+REPORT RequestId: 2f0ec79e-a40e-47a5-ad11-e7be3ea84386  Duration: 172.45 ms     Billed Duration: 200 ms Memory Size: 1536 MB    Max Memory Used: 7 MB   
 
-2019-04-24 12:56:22,672 INFO  [io.git.mar.HelloLambda] (Lambda Thread) Processed data
-Test lambda logger
-END RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72
-
-REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 1073.42 ms       Duration: 76.57 ms      Billed Duration: 100 ms Memory Size: 1536 MB    Max Memory Used: 87 MB  
-
-{"statusCode":200,"headers":null,"body":"{\"greeting\":\"Hello Hello World.\",\"context\":\"io.quarkus.amazon.lambda.runtime.AmazonLambdaContext@14964b0f\"}"}
+{"statusCode":200,"headers":null,"body":"{\"greeting\":\"Hello Hello World.\",\"context\":\"lambdainternal.api.LambdaContext@4141d797\"}"}
 ```
 
 # Invoke local lambda as Native runtime
-`sls invoke local -f hello --path event.json --type native`
+`sls invoke local --docker -f helloNative --path event.json`
 
 
 * Result
 ```
 Serverless: Packaging service...
 Serverless: Building Docker image...
+2019-11-04 08:16:20,650 INFO  [io.quarkus] (main) quarkus-lambda-native 2.0-SNAPSHOT (running on Quarkus 0.27.0) started in 0.033s. 
+2019-11-04 08:16:20,652 INFO  [io.quarkus] (main) Profile prod activated. 
+2019-11-04 08:16:20,652 INFO  [io.quarkus] (main) Installed features: [amazon-lambda, cdi]
 START RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72 Version: $LATEST
-
-2019-04-24 12:55:54,340 INFO  [io.git.mar.HelloLambda] (Lambda Thread) Processed data
-Test lambda logger2019-04-24 12:55:54,340 INFO  [io.quarkus] (main) Quarkus 999-SNAPSHOT started in 0.045s. Listening on: http://0.0.0.0:8080
-2019-04-24 12:55:54,343 INFO  [io.quarkus] (main) Installed features: [cdi, resteasy, resteasy-jsonb, smallrye-rest-client]
-
+2019-11-04 08:16:20,658 INFO  [io.git.mar.HelloLambda] (Lambda Thread) [52fdfc07-2182-154f-163f-5f0f9a621d72] Processed data
 END RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72
-REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 96.86 ms Duration: 8.46 ms       Billed Duration: 100 ms Memory Size: 1536 MB    Max Memory Used: 25 MB  
+REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 98.96 ms Duration: 8.64 ms       Billed Duration: 100 ms Memory Size: 1536 MB    Max Memory Used: 21 MB  
 
-{"statusCode":200,"headers":null,"body":"{\"greeting\":\"Hello Hello World.\",\"context\":\"io.quarkus.amazon.lambda.runtime.AmazonLambdaContext@7ff564a18800\"}"}
+{"statusCode":200,"headers":null,"body":"{\"greeting\":\"Hello Hello World.\",\"context\":\"io.quarkus.amazon.lambda.runtime.AmazonLambdaContext@7f996da1e7a0\"}"}
 ```
 
 # Run on AWS (API Gateway + Lambda)
 * [Serverless framework](https://serverless.com/framework/docs/providers/aws/guide/quick-start/) is required
 
 1. Deploy to AWS
- - as a java function`sls deploy --type java -v`
- - or, as a native function `sls deploy --type native -v`
+`sls deploy -v`
 
-2. Invoke a function directly
-`sls invoke -f hello -l --path event.json`
+2. Invoke a JVM function directly
+`sls invoke -f helloJvm -l --path event.json`
 
-3. Invoke a function via API gateway
-`curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev/user?firstname=jon&lastname=doe'`
+3. Invoke a Native function directly
+`sls invoke -f helloNative -l --path event.json`
 
-## AWS Performance comparison
-| Runtime       | Initialization| Total Duration  |
-| ------------- |:-------------:| -----:|
-| Java - first  | 1.3 s| 1.7 s |
-| Java - next   | 0 | 27 ms |
-| Native -first | 157 ms     |   320 ms |
-| Native - next | 0     |   8 ms |
+4. Invoke a JVM function via API gateway
+`curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev/jvm?firstname=jon&lastname=doe'`
 
-## AWS X-Ray traces when running Quarkus java lambda
-### Cold lambda
-<img src="hello-lambda-quarkus-java.png" width="600px">
-
-### Warm lamdba
-<img src="hello-lambda-quarkus-java-second.png" width="600px">
-
-## AWS X-Ray traces when running Quarkus native lambda
-### Cold lambda
-<img src="hello-lambda-quarkus-native-coldstart.png" width="600px">
-
-### Warm lamdba
-<img src="hello-lambda-quarkus-native-next.png" width="600px">
+5. Invoke a JVM function via API gateway
+`curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev/native?firstname=jon&lastname=doe'`
