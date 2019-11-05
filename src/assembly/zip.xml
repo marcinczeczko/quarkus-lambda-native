@@ -8,8 +8,18 @@
   <files>
     <file>
       <source>${project.build.directory}${file.separator}${artifactId}-${version}-runner</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory>${file.separator}</outputDirectory>
       <destName>bootstrap</destName>
+      <fileMode>755</fileMode>
+    </file>
+    <file>
+      <source>docker-ssl/cacerts</source>
+      <outputDirectory>${file.separator}</outputDirectory>
+      <fileMode>755</fileMode>
+    </file>
+    <file>
+      <source>docker-ssl/libsunec.so</source>
+      <outputDirectory>${file.separator}</outputDirectory>
       <fileMode>755</fileMode>
     </file>
   </files>

@@ -2,15 +2,15 @@
 - Graalvm >= 19.2.1
 - [Serverless framework >= 1.56.1](https://serverless.com/framework/docs/getting-started/)
 
-# Configure serverless framework
-`npm install`
+# Get the libsunec.so & cacerts
+`./init-ssl-native.sh`
 
 # Build
 `mvn clean package -Dnative=true -Dnative-image.docker-build=true`
 
 # Invoke local lambda as Java runtime
 * Run
-`sls invoke local --docker -f helloJvm --path event.json`
+`sls invoke local --docker -f fetchJvm --path event.json`
 
 * Result
 ```
@@ -28,8 +28,7 @@ REPORT RequestId: 2f0ec79e-a40e-47a5-ad11-e7be3ea84386  Duration: 172.45 ms     
 ```
 
 # Invoke local lambda as Native runtime
-`sls invoke local --docker -f helloNative --path event.json`
-
+`sls invoke local --docker -f fetchNative --path event.json`
 
 * Result
 ```
