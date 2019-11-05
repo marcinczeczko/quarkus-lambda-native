@@ -2,6 +2,9 @@
 - Graalvm >= 19.2.1
 - [Serverless framework >= 1.56.1](https://serverless.com/framework/docs/getting-started/)
 
+# Configure serverless framework
+`npm install`
+
 # Build
 `mvn clean package -Dnative=true -Dnative-image.docker-build=true`
 
