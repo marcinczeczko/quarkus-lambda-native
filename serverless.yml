@@ -25,6 +25,8 @@ functions:
   helloNative:
     runtime: provided
     handler: handler
+    environment:
+      DISABLE_SIGNAL_HANDLERS: true
     package:
       artifact: target/function.zip
     events:
