@@ -1,9 +1,9 @@
 # Prerequisites
-- Graalvm >= 19.2.1
+- Graalvm = 19.3.1
 - [Serverless framework >= 1.56.1](https://serverless.com/framework/docs/getting-started/)
 
 # Build
-`mvn clean package -Dnative=true -Dnative-image.docker-build=true`
+`mvn clean package -Dnative-lambda=true`
 
 # Invoke local lambda as Java runtime
 * Run
@@ -60,3 +60,6 @@ REPORT RequestId: 52fdfc07-2182-154f-163f-5f0f9a621d72  Init Duration: 98.96 ms 
 
 5. Invoke a JVM function via API gateway
 `curl -s 'https://<apiid>.execute-api.eu-central-1.amazonaws.com/dev/native?firstname=jon&lastname=doe'`
+
+** Don't forget to remove your stuff from AWS after tests **
+`sls remove`

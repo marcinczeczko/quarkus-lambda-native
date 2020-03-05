@@ -8,7 +8,7 @@
   <files>
     <file>
       <source>${project.build.directory}${file.separator}${artifactId}-${version}-runner</source>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory>${file.separator}</outputDirectory>
       <destName>bootstrap</destName>
       <fileMode>755</fileMode>
     </file>
