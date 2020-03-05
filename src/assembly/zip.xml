@@ -12,5 +12,15 @@
       <destName>bootstrap</destName>
       <fileMode>755</fileMode>
     </file>
+<!--    <file>-->
+<!--      <source>docker-ssl/cacerts</source>-->
+<!--      <outputDirectory>${file.separator}</outputDirectory>-->
+<!--      <fileMode>755</fileMode>-->
+<!--    </file>-->
+<!--    <file>-->
+<!--      <source>docker-ssl/libsunec.so</source>-->
+<!--      <outputDirectory>${file.separator}</outputDirectory>-->
+<!--      <fileMode>755</fileMode>-->
+<!--    </file>-->
   </files>
 </assembly>

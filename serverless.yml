@@ -1,6 +1,13 @@
-service: hello
+service: quarkus-lambda
 
 frameworkVersion: ">=1.56.1"
+
+custom:
+  function:
+    addHandler: add
+    fetchHandler: fetchAll
+  dynamodb:
+    tableName: ${self:service}-${opt:stage, self:provider.stage}
 
 provider:
   name: aws
@@ -8,28 +15,88 @@ provider:
   region: eu-central-1
   tracing:
     lambda: true
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["TodosDynamoDbTable", "Arn" ] }
 
 package:
   individually: true
 
 functions:
-  helloJvm:
+  fetchJvm:
     runtime: java8
     handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
     package:
-      artifact: target/quarkus-lambda-native-2.0-SNAPSHOT-runner.jar
+      artifact: target/quarkus-lambda-native-3.0-SNAPSHOT-runner.jar
+    environment:
+      JAVA_TOOL_OPTIONS: -Dquarkus.profile=${opt:stage, self:provider.stage} -Dquarkus.lambda.handler=${self:custom.function.fetchHandler} -Ddynamo.table.name=${self:custom.dynamodb.tableName} -Dquarkus.dynamodb.aws.region=${self:provider.region}
     events:
       - http:
           method: get
-          path: jvm
-  helloNative:
-    runtime: provided
-    handler: handler
+          path: fetchjvm
+  addJvm:
+    runtime: java8
+    handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
+    package:
+      artifact: target/quarkus-lambda-native-3.0-SNAPSHOT-runner.jar
     environment:
-      DISABLE_SIGNAL_HANDLERS: true
+      JAVA_TOOL_OPTIONS: -Dquarkus.profile=${opt:stage, self:provider.stage} -Dquarkus.lambda.handler=${self:custom.function.addHandler} -Ddynamo.table.name=${self:custom.dynamodb.tableName} -Dquarkus.dynamodb.aws.region=${self:provider.region}
+    events:
+      - http:
+          method: post
+          path: addjvm
+  fetchNative:
+    runtime: provided
+    handler: native.handler
     package:
       artifact: target/function.zip
+    environment:
+      DISABLE_SIGNAL_HANDLERS: true
+      QUARKUS_LAMBDA_HANDLER: ${self:custom.function.fetchHandler}
+      DYNAMO_TABLE_NAME: ${self:custom.dynamodb.tableName}
+      QUARKUS_DYNAMODB_AWS_REGION: ${self:provider.region}
+      QUARKUS_PROFILE: ${opt:stage, self:provider.stage}
     events:
       - http:
           method: get
-          path: native
+          path: fetchNative
+  addNative:
+    runtime: provided
+    handler: native.handler
+    package:
+      artifact: target/function.zip
+    environment:
+      DISABLE_SIGNAL_HANDLERS: true
+      QUARKUS_LAMBDA_HANDLER: ${self:custom.function.addHandler}
+      DYNAMO_TABLE_NAME: ${self:custom.dynamodb.tableName}
+      QUARKUS_DYNAMODB_AWS_REGION: ${self:provider.region}
+      QUARKUS_PROFILE: ${opt:stage, self:provider.stage}
+    events:
+      - http:
+          method: post
+          path: addNative
+
+resources:
+  Resources:
+    TodosDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: todoId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: todoId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.dynamodb.tableName}
