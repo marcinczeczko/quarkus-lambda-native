@@ -36,3 +36,6 @@ It will take some time....
 
 - Using JVM lambda
 `curl https://<apiid>.execute-api.<region>.amazonaws.com/dev/fetchJvm`
+
+6. Don't forget to cleanup your AWS account if not using
+`sls remove`
