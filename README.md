@@ -3,7 +3,7 @@
 - [Serverless framework >= 1.56.1](https://serverless.com/framework/docs/getting-started/)
 
 # Build
-`mvn clean package -Dnative-lambda=true`
+`mvn clean package -Dnative-lambda=true && mvn package`
 
 # Invoke local lambda as Java runtime
 * Run
