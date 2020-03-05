@@ -1,12 +1,29 @@
+# Quarkus Lambda native talking to DynamodDB
+
 # Prerequisites
-- Graalvm >= 19.2.1
+- Graalvm = 19.3.1
 - [Serverless framework >= 1.56.1](https://serverless.com/framework/docs/getting-started/)
 
-# Get the libsunec.so & cacerts
-`./init-ssl-native.sh`
+## Local
 
-# Build
-`mvn clean package -Dnative=true -Dnative-image.docker-build=true`
+
+## AWS
+
+
+# Play with JVM build
+
+
+# Play with Native build
+
+
+# Build Native
+`mvn clean package -Dnative=true -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java8`
+
+It will take some time before a build in container starts, as it downloads builder image.
+
+# Run locally
+## Start local DynamoDB instance
+docker run --rm --publish 8008:4572  -e SERVICES=s3  -e START_WEB=0 -d localstack/localstack
 
 # Invoke local lambda as Java runtime
 * Run
