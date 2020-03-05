@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.marcinczeczko</groupId>
     <artifactId>quarkus-lambda-native</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <properties>
         <quarkus.version>1.2.1.Final</quarkus.version>
         <surefire-plugin.version>2.22.1</surefire-plugin.version>
@@ -74,13 +74,15 @@
     </build>
     <profiles>
         <profile>
-            <id>native</id>
+            <id>native-lambda</id>
             <properties>
+                <quarkus.native.container-build>true</quarkus.native.container-build>
                 <quarkus.package.type>native</quarkus.package.type>
+                <quarkus.native.builder-image>quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java8</quarkus.native.builder-image>
             </properties>
             <activation>
                 <property>
-                    <name>native</name>
+                    <name>native-lambda</name>
                 </property>
             </activation>
             <build>

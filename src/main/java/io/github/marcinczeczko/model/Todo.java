@@ -8,6 +8,10 @@ public class Todo {
   private String id;
   private String name;
 
+  public Todo() {
+    //Default constructor
+  }
+
   public Todo(String id, String name) {
     this.id = id;
     this.name = name;

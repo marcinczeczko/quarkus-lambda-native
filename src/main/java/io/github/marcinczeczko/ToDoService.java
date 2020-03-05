@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -23,7 +24,7 @@ public class ToDoService {
 
   private static final Logger LOG = Logger.getLogger(ToDoService.class);
 
-  @ConfigItem(name = "dynamo.table.name")
+  @ConfigProperty(name = "dynamo.table.name")
   String tableName;
 
   @Inject

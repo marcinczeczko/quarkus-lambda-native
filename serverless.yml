@@ -35,7 +35,7 @@ functions:
     runtime: java8
     handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
     package:
-      artifact: target/quarkus-lambda-native-2.0-SNAPSHOT-runner.jar
+      artifact: target/quarkus-lambda-native-3.0-SNAPSHOT-runner.jar
     environment:
       JAVA_TOOL_OPTIONS: -Dquarkus.profile=${opt:stage, self:provider.stage} -Dquarkus.lambda.handler=${self:custom.function.fetchHandler} -Ddynamo.table.name=${self:custom.dynamodb.tableName} -Dquarkus.dynamodb.aws.region=${self:provider.region}
     events:
@@ -46,7 +46,7 @@ functions:
     runtime: java8
     handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
     package:
-      artifact: target/quarkus-lambda-native-2.0-SNAPSHOT-runner.jar
+      artifact: target/quarkus-lambda-native-3.0-SNAPSHOT-runner.jar
     environment:
       JAVA_TOOL_OPTIONS: -Dquarkus.profile=${opt:stage, self:provider.stage} -Dquarkus.lambda.handler=${self:custom.function.addHandler} -Ddynamo.table.name=${self:custom.dynamodb.tableName} -Dquarkus.dynamodb.aws.region=${self:provider.region}
     events:
@@ -96,5 +96,7 @@ resources:
         KeySchema:
           - AttributeName: todoId
             KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
         TableName: ${self:custom.dynamodb.tableName}
